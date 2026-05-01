@@ -1,3 +1,8 @@
 .env
 __pycache__/
 .DS_Store
+**/graphify-out/cache/*
+__pycache__
+cost.json
+manifest.json
+.codemap/
