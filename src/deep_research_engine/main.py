@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import sys
 from deep_research_engine.crew import DeepResearchEngineCrew
+from deep_research_engine.utils import load_yaml_config
 
 # This main file is intended to be a way for your to run your
 # crew locally, so refrain from adding unnecessary logic into this file.
@@ -11,12 +12,7 @@ def run():
     """
     Run the crew.
     """
-    inputs = {
-        'primary_topic': 'sample_value',
-        'sub_nodes': 'sample_value',
-        'target_audience': 'sample_value',
-        'grounding_context': 'sample_value'
-    }
+    inputs = load_yaml_config("inputs.yaml")
     DeepResearchEngineCrew().crew().kickoff(inputs=inputs)
 
 
@@ -24,12 +20,7 @@ def train():
     """
     Train the crew for a given number of iterations.
     """
-    inputs = {
-        'primary_topic': 'sample_value',
-        'sub_nodes': 'sample_value',
-        'target_audience': 'sample_value',
-        'grounding_context': 'sample_value'
-    }
+    inputs = load_yaml_config("inputs.yaml")
     try:
         DeepResearchEngineCrew().crew().train(n_iterations=int(sys.argv[1]), filename=sys.argv[2], inputs=inputs)
 
@@ -50,12 +41,7 @@ def test():
     """
     Test the crew execution and returns the results.
     """
-    inputs = {
-        'primary_topic': 'sample_value',
-        'sub_nodes': 'sample_value',
-        'target_audience': 'sample_value',
-        'grounding_context': 'sample_value'
-    }
+    inputs = load_yaml_config("inputs.yaml")
     try:
         DeepResearchEngineCrew().crew().test(n_iterations=int(sys.argv[1]), openai_model_name=sys.argv[2], inputs=inputs)
 
