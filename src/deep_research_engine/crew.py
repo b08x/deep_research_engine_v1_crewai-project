@@ -41,7 +41,7 @@ class DeepResearchEngineCrew:
             
             max_execution_time=None,
             llm=LLM(
-                model="groq/llama-3.3-70b-versatile",
+                model=self.agents_config["senior_research_strategist"].get("llm", "groq/llama-3.3-70b-versatile"),
                 temperature=0.7,
                 
             ),
@@ -71,7 +71,7 @@ class DeepResearchEngineCrew:
             
             max_execution_time=None,
             llm=LLM(
-                model="openai/openai/gpt-4o-mini",
+                model=self.agents_config["other_steve_deep_research_mode"].get("llm", "openai/gpt-4o-mini"),
                 
                 
             ),
@@ -100,7 +100,7 @@ class DeepResearchEngineCrew:
             
             max_execution_time=None,
             llm=LLM(
-                model="openai/openai/gpt-4o-mini",
+                model=self.agents_config["other_steve_sift_fact_checker"].get("llm", "openai/gpt-4o-mini"),
                 
                 
             ),
@@ -127,7 +127,7 @@ class DeepResearchEngineCrew:
             
             max_execution_time=None,
             llm=LLM(
-                model="openai/mistralai/mistral-large",
+                model=self.agents_config["other_steve_pragmatic_editor"].get("llm", "openai/mistralai/mistral-large"),
                 
                 
             ),
@@ -154,7 +154,7 @@ class DeepResearchEngineCrew:
             
             max_execution_time=None,
             llm=LLM(
-                model="openai/minimax/minimax-m1",
+                model=self.agents_config["other_steve_tree_of_thoughts_evaluator"].get("llm", "openai/minimax/minimax-m1"),
                 
                 
             ),

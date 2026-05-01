@@ -8,6 +8,8 @@ dependencies = [
     "crewai[file-processing,litellm,tools]==1.14.3",
     "exa-py",
     "pydantic",
+    "textual",
+    "python-dotenv",
 ]
 
 [project.scripts]
@@ -17,6 +19,7 @@ train = "deep_research_engine.main:train"
 replay = "deep_research_engine.main:replay"
 test = "deep_research_engine.main:test"
 run_with_trigger = "deep_research_engine.main:run_with_trigger"
+configure_crew = "deep_research_engine.tui_config:main"
 
 [build-system]
 requires = ["hatchling"]

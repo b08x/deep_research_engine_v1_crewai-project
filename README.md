@@ -20,8 +20,16 @@ crewai install
 ```
 ### Customizing
 
-**Add your `OPENAI_API_KEY` into the `.env` file**
+**Add your API keys (e.g., `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`) into the `.env` file**
 
+#### Interactive Configuration (Wicked Sweet TUI)
+You can visually edit your agents, tasks, and models using the included interactive dashboard. It validates your API keys and dynamically fetches available models for your selected provider (OpenAI, Anthropic, Gemini, Groq, Mistral) via LiteLLM.
+
+```bash
+uv run configure_crew
+```
+
+#### Manual Configuration
 - Modify `src/deep_research_engine/config/agents.yaml` to define your agents
 - Modify `src/deep_research_engine/config/tasks.yaml` to define your tasks
 - Modify `src/deep_research_engine/crew.py` to add your own logic, tools and specific args
