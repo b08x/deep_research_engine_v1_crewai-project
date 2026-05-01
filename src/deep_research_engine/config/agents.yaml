@@ -103,11 +103,11 @@ other_steve_pragmatic_editor:
     tool_calling: false
     structured_output: false
   llm_config:
-    temperature: 0.7
+    temperature: 0.4
     top_p: 0.9
     top_k: null
     max_tokens: 8192
-  llm: groq/llama-3.3-70b-versatile
+  llm: mistral/magistral-medium-latest
 other_steve_tree_of_thoughts_evaluator:
   role: Other Steve (Tree of Thoughts Evaluator)
   goal: Generate distinct technical approaches to analyzing {primary_topic}, objectively
