@@ -7,168 +7,158 @@ from crewai_tools import (
 	SerperDevTool,
 	EXASearchTool,
 	ScrapeWebsiteTool,
-	ArxivPaperTool
+	ArxivPaperTool,
+	FileWriterTool
 )
-
-
-
-
-
 
 @CrewBase
 class DeepResearchEngineCrew:
     """DeepResearchEngine crew"""
 
-    
     @agent
     def senior_research_strategist(self) -> Agent:
-        
-        
+        llm_config = self.agents_config["senior_research_strategist"].get("llm_config", {})
+        llm_params = {
+            "model": self.agents_config["senior_research_strategist"].get("llm", "groq/llama-3.3-70b-versatile"),
+            "temperature": llm_config.get("temperature", 0.7),
+            "max_tokens": llm_config.get("max_tokens", 8192),
+        }
+        if llm_config.get("top_p") is not None:
+            llm_params["top_p"] = llm_config.get("top_p")
+        if llm_config.get("top_k") is not None:
+            llm_params["top_k"] = llm_config.get("top_k")
+
         return Agent(
             config=self.agents_config["senior_research_strategist"],
-            
-            
-            tools=[				SerperDevTool(),
-				EXASearchTool(),
-				ScrapeWebsiteTool()],
+            tools=[
+                SerperDevTool(),
+                EXASearchTool(),
+                ScrapeWebsiteTool(),
+                FileWriterTool()
+            ],
             reasoning=False,
             max_reasoning_attempts=None,
             inject_date=True,
             allow_delegation=False,
             max_iter=25,
             max_rpm=None,
-            
-            
             max_execution_time=None,
-            llm=LLM(
-                model=self.agents_config["senior_research_strategist"].get("llm", "groq/llama-3.3-70b-versatile"),
-                temperature=self.agents_config["senior_research_strategist"].get("llm_config", {}).get("temperature", 0.7),
-                top_p=self.agents_config["senior_research_strategist"].get("llm_config", {}).get("top_p"),
-                top_k=self.agents_config["senior_research_strategist"].get("llm_config", {}).get("top_k"),
-                max_tokens=self.agents_config["senior_research_strategist"].get("llm_config", {}).get("max_tokens", 8192),
-            ),
-            
+            llm=LLM(**llm_params),
         )
         
     
     @agent
     def other_steve_deep_research_mode(self) -> Agent:
-        
-        
+        llm_config = self.agents_config["other_steve_deep_research_mode"].get("llm_config", {})
+        llm_params = {
+            "model": self.agents_config["other_steve_deep_research_mode"].get("llm", "openai/gpt-4o-mini"),
+            "temperature": llm_config.get("temperature", 0.7),
+            "max_tokens": llm_config.get("max_tokens", 8192),
+        }
+        if llm_config.get("top_p") is not None:
+            llm_params["top_p"] = llm_config.get("top_p")
+        if llm_config.get("top_k") is not None:
+            llm_params["top_k"] = llm_config.get("top_k")
+
         return Agent(
             config=self.agents_config["other_steve_deep_research_mode"],
-            
-            
             tools=[                SerperDevTool(),
                 EXASearchTool(),
                 ScrapeWebsiteTool(),
-                ArxivPaperTool()],
+                ArxivPaperTool(),
+                FileWriterTool()],
             reasoning=False,
             max_reasoning_attempts=None,
             inject_date=True,
             allow_delegation=False,
             max_iter=25,
             max_rpm=None,
-            
-            
             max_execution_time=None,
-            llm=LLM(
-                model=self.agents_config["other_steve_deep_research_mode"].get("llm", "openai/gpt-4o-mini"),
-                temperature=self.agents_config["other_steve_deep_research_mode"].get("llm_config", {}).get("temperature", 0.7),
-                top_p=self.agents_config["other_steve_deep_research_mode"].get("llm_config", {}).get("top_p"),
-                top_k=self.agents_config["other_steve_deep_research_mode"].get("llm_config", {}).get("top_k"),
-                max_tokens=self.agents_config["other_steve_deep_research_mode"].get("llm_config", {}).get("max_tokens", 8192),
-            ),
-            
+            llm=LLM(**llm_params),
         )
         
     
     @agent
     def other_steve_sift_fact_checker(self) -> Agent:
-        
-        
+        llm_config = self.agents_config["other_steve_sift_fact_checker"].get("llm_config", {})
+        llm_params = {
+            "model": self.agents_config["other_steve_sift_fact_checker"].get("llm", "openai/gpt-4o-mini"),
+            "temperature": llm_config.get("temperature", 0.7),
+            "max_tokens": llm_config.get("max_tokens", 8192),
+        }
+        if llm_config.get("top_p") is not None:
+            llm_params["top_p"] = llm_config.get("top_p")
+        if llm_config.get("top_k") is not None:
+            llm_params["top_k"] = llm_config.get("top_k")
+
         return Agent(
             config=self.agents_config["other_steve_sift_fact_checker"],
-            
-            
             tools=[                SerperDevTool(),
                 EXASearchTool(),
-                ScrapeWebsiteTool()],
+                ScrapeWebsiteTool(),
+                FileWriterTool()],
             reasoning=False,
             max_reasoning_attempts=None,
             inject_date=True,
             allow_delegation=False,
             max_iter=25,
             max_rpm=None,
-            
-            
             max_execution_time=None,
-            llm=LLM(
-                model=self.agents_config["other_steve_sift_fact_checker"].get("llm", "openai/gpt-4o-mini"),
-                temperature=self.agents_config["other_steve_sift_fact_checker"].get("llm_config", {}).get("temperature", 0.7),
-                top_p=self.agents_config["other_steve_sift_fact_checker"].get("llm_config", {}).get("top_p"),
-                top_k=self.agents_config["other_steve_sift_fact_checker"].get("llm_config", {}).get("top_k"),
-                max_tokens=self.agents_config["other_steve_sift_fact_checker"].get("llm_config", {}).get("max_tokens", 8192),
-            ),
-            
+            llm=LLM(**llm_params),
         )
         
     
     @agent
     def other_steve_pragmatic_editor(self) -> Agent:
-        
-        
+        llm_config = self.agents_config["other_steve_pragmatic_editor"].get("llm_config", {})
+        llm_params = {
+            "model": self.agents_config["other_steve_pragmatic_editor"].get("llm", "openai/mistralai/mistral-large"),
+            "temperature": llm_config.get("temperature", 0.7),
+            "max_tokens": llm_config.get("max_tokens", 8192),
+        }
+        if llm_config.get("top_p") is not None:
+            llm_params["top_p"] = llm_config.get("top_p")
+        if llm_config.get("top_k") is not None:
+            llm_params["top_k"] = llm_config.get("top_k")
+
         return Agent(
             config=self.agents_config["other_steve_pragmatic_editor"],
-            
-            
-            tools=[],
+            tools=[FileWriterTool()],
             reasoning=False,
             max_reasoning_attempts=None,
             inject_date=True,
             allow_delegation=False,
             max_iter=25,
             max_rpm=None,
-            
-            
             max_execution_time=None,
-            llm=LLM(
-                model=self.agents_config["other_steve_pragmatic_editor"].get("llm", "openai/mistralai/mistral-large"),
-                temperature=self.agents_config["other_steve_pragmatic_editor"].get("llm_config", {}).get("temperature", 0.7),
-                top_p=self.agents_config["other_steve_pragmatic_editor"].get("llm_config", {}).get("top_p"),
-                top_k=self.agents_config["other_steve_pragmatic_editor"].get("llm_config", {}).get("top_k"),
-                max_tokens=self.agents_config["other_steve_pragmatic_editor"].get("llm_config", {}).get("max_tokens", 8192),
-            ),
-            
+            llm=LLM(**llm_params),
         )
         
     
     @agent
     def other_steve_tree_of_thoughts_evaluator(self) -> Agent:
-        
-        
+        llm_config = self.agents_config["other_steve_tree_of_thoughts_evaluator"].get("llm_config", {})
+        llm_params = {
+            "model": self.agents_config["other_steve_tree_of_thoughts_evaluator"].get("llm", "openrouter/z-ai/glm-4.7"),
+            "temperature": llm_config.get("temperature", 0.7),
+            "max_tokens": llm_config.get("max_tokens", 8192),
+        }
+        if llm_config.get("top_p") is not None:
+            llm_params["top_p"] = llm_config.get("top_p")
+        if llm_config.get("top_k") is not None:
+            llm_params["top_k"] = llm_config.get("top_k")
+
         return Agent(
             config=self.agents_config["other_steve_tree_of_thoughts_evaluator"],
-            
-            
-            tools=[],
+            tools=[FileWriterTool()],
             reasoning=False,
             max_reasoning_attempts=None,
             inject_date=True,
             allow_delegation=False,
             max_iter=25,
             max_rpm=None,
-            
-            
             max_execution_time=None,
-            llm=LLM(
-                model=self.agents_config["other_steve_tree_of_thoughts_evaluator"].get("llm_config", {}).get("model", "openai/minimax/minimax-m1"),
-                temperature=self.agents_config["other_steve_tree_of_thoughts_evaluator"].get("llm_config", {}).get("temperature", 0.7),
-                top_p=self.agents_config["other_steve_tree_of_thoughts_evaluator"].get("llm_config", {}).get("top_p"),
-                top_k=self.agents_config["other_steve_tree_of_thoughts_evaluator"].get("llm_config", {}).get("top_k"),
-                max_tokens=self.agents_config["other_steve_tree_of_thoughts_evaluator"].get("llm_config", {}).get("max_tokens", 8192),
-            ),
-            
+            llm=LLM(**llm_params),
         )
         
     
