@@ -6,3 +6,4 @@ __pycache__
 cost.json
 manifest.json
 .codemap/
+**/graphify-out/obsidian/*

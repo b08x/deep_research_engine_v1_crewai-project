@@ -5,11 +5,17 @@ description = "deep_research_engine using crewAI"
 authors = [{ name = "Your Name", email = "you@example.com" }]
 requires-python = ">=3.10,<3.14"
 dependencies = [
-    "crewai[file-processing,litellm,tools]==1.14.3",
+    "crewai[file-processing,litellm,tools]==1.14.4",
     "exa-py",
     "pydantic",
     "textual",
     "python-dotenv",
+    "trafilatura",
+    "spacy",
+    "spacy-llm",
+    "txtai[pipeline,similarity,ann]",
+    "redis",
+    "kreuzberg",
 ]
 
 [project.scripts]
