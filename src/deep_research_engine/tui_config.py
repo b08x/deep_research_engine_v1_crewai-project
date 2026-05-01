@@ -1,7 +1,7 @@
 import os
 import yaml
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
 
 from textual.app import App, ComposeResult
 from textual.containers import Container, Horizontal, Vertical, ScrollableContainer
@@ -65,9 +65,11 @@ class AgentEditor(Vertical):
             
             yield Label("LLM Provider")
             current_model = self.agent_data.get("llm", "")
-            current_provider = "openai" # Default
+            current_provider = "openai"
             if "/" in current_model:
-                current_provider = current_model.split("/")[0]
+                prov = current_model.split("/")[0]
+                if prov in self.providers:
+                    current_provider = prov
             
             yield Select(
                 [(p.capitalize(), p) for p in self.providers],
@@ -80,9 +82,11 @@ class AgentEditor(Vertical):
             
             yield Label("Fallback LLM Provider (Optional)")
             fallback_model = self.agent_data.get("fallback_llm", "")
-            fallback_provider = None
+            fallback_provider = Select.NULL
             if "/" in fallback_model:
-                fallback_provider = fallback_model.split("/")[0]
+                prov = fallback_model.split("/")[0]
+                if prov in self.providers:
+                    fallback_provider = prov
             
             yield Select(
                 [(p.capitalize(), p) for p in self.providers],
@@ -137,7 +141,7 @@ class AgentEditor(Vertical):
     def on_mount(self) -> None:
         self.update_primary_models(self.query_one("#agent-provider", Select).value)
         fallback_prov = self.query_one("#agent-fallback-provider", Select).value
-        if fallback_prov:
+        if fallback_prov and fallback_prov is not Select.NULL:
             self.update_fallback_models(fallback_prov)
 
     @on(Select.Changed, "#agent-provider")
@@ -146,13 +150,16 @@ class AgentEditor(Vertical):
 
     @on(Select.Changed, "#agent-fallback-provider")
     def on_fallback_provider_changed(self, event: Select.Changed) -> None:
-        if event.value:
+        if event.value and event.value is not Select.NULL:
             self.update_fallback_models(event.value)
         else:
             self.query_one("#agent-fallback-model", Select).set_options([])
 
     @work
-    async def update_primary_models(self, provider: str) -> None:
+    async def update_primary_models(self, provider: Any) -> None:
+        if not provider or provider is Select.NULL:
+            return
+            
         model_select = self.query_one("#agent-model", Select)
         cap_warning = self.query_one("#cap-warning", Static)
         
@@ -186,7 +193,10 @@ class AgentEditor(Vertical):
             cap_warning.update("")
 
     @work
-    async def update_fallback_models(self, provider: str) -> None:
+    async def update_fallback_models(self, provider: Any) -> None:
+        if not provider or provider is Select.NULL:
+            return
+            
         model_select = self.query_one("#agent-fallback-model", Select)
         
         if not validate_api_key(provider):
@@ -269,9 +279,13 @@ class TaskEditor(Vertical):
             yield TextArea(str(self.task_data.get("expected_output", "")), id="task-output")
             
             yield Label("Assigned Agent")
+            assigned_agent = self.task_data.get("agent", Select.NULL)
+            if assigned_agent and assigned_agent not in self.agents:
+                assigned_agent = Select.NULL
+                
             yield Select(
                 [(a, a) for a in self.agents],
-                value=self.task_data.get("agent", ""),
+                value=assigned_agent if assigned_agent else Select.NULL,
                 id="task-agent"
             )
             
@@ -514,7 +528,7 @@ class CrewConfigApp(App):
         
         provider = self.query_one("#agent-provider", Select).value
         model = self.query_one("#agent-model", Select).value
-        if provider and model:
+        if provider and provider is not Select.NULL and model and model is not Select.NULL:
             if model.startswith(f"{provider}/"):
                 self.agents_config[agent_id]["llm"] = model
             else:
@@ -522,7 +536,8 @@ class CrewConfigApp(App):
 
         fallback_provider = self.query_one("#agent-fallback-provider", Select).value
         fallback_model = self.query_one("#agent-fallback-model", Select).value
-        if fallback_provider and fallback_model:
+        if (fallback_provider and fallback_provider is not Select.NULL and 
+            fallback_model and fallback_model is not Select.NULL):
             if fallback_model.startswith(f"{fallback_provider}/"):
                 self.agents_config[agent_id]["fallback_llm"] = fallback_model
             else:
@@ -557,7 +572,8 @@ class CrewConfigApp(App):
         
         self.tasks_config[task_id]["description"] = self.query_one("#task-desc", TextArea).text
         self.tasks_config[task_id]["expected_output"] = self.query_one("#task-output", TextArea).text
-        self.tasks_config[task_id]["agent"] = self.query_one("#task-agent", Select).value
+        task_agent = self.query_one("#task-agent", Select).value
+        self.tasks_config[task_id]["agent"] = task_agent if task_agent is not Select.NULL else ""
         
         save_yaml_config("tasks.yaml", self.tasks_config)
         self.notify(f"Task {task_id} saved successfully!")
