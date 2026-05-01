@@ -1,0 +1,80 @@
+---
+strategy_formulation:
+  description: Analyze the provided inputs ({primary_topic}, {sub_nodes}, {target_audience},
+    {grounding_context}) to create a comprehensive "Strategic Research Brief." Determine
+    the required "Depth Level" (1-5) based on the target audience sophistication and
+    research needs. Identify potential biases in the provided grounding context and
+    recommend analytical approaches to counteract them. Map the semantic landscape
+    to identify what might be missing from the user's initial formulation.
+  expected_output: 'A structured Strategic Research Brief in markdown format containing:
+    1) Depth Level assessment (1-5 with justification), 2) Audience-appropriate tone
+    and complexity guidelines, 3) List of prohibited generic terms and required analytical
+    vectors, 4) Identified potential biases in grounding context, 5) Recommended focus
+    areas for gap analysis, 6) Specific instructions for handling contradictions between
+    sources.'
+  agent: senior_research_strategist
+deep_technical_research_execution:
+  description: Execute comprehensive web research on {primary_topic} and {sub_nodes}
+    using available research tools. Search for recent developments, technical specifications,
+    market analysis, and expert opinions. Focus on finding concrete data, performance
+    metrics, and real-world implementation details. Gather information from technical
+    blogs, research papers, industry reports, and official documentation.
+  expected_output: 'A comprehensive research report containing: 1) Current state and
+    recent developments, 2) Technical specifications and performance data, 3) Market
+    trends and adoption patterns, 4) Expert opinions and industry analysis, 5) Source
+    citations for all claims. Include specific metrics, dates, and quantifiable data
+    wherever possible.'
+  agent: other_steve_deep_research_mode
+  context:
+  - strategy_formulation
+sift_fact_checking_and_verification:
+  description: Apply rigorous SIFT evaluation protocols to verify claims, assess source
+    credibility, and identify errors in the research findings. Systematically evaluate
+    information sources using the 1-5 credibility scale, perform Toulmin analysis
+    on key claims, and map expert consensus. Search for counter-evidence, edge cases,
+    and missing context. Provide structured fact-checking output with verified facts,
+    corrections, source reliability assessment, and revised summary.
+  expected_output: "A structured fact-checking report following the SIFT protocol
+    format: ✅ Verified Facts table (confidence ratings 1-5), ⚠️ Errors and Corrections
+    table, \U0001F4CC Corrections Summary with bolded key terms, \U0001F4CC Potential
+    Leads table, \U0001F6D1 Assessment of Source Reliability, \U0001F4D7 Revised Summary
+    (corrected and accurate), \U0001F3C5 Fact-Checker Assessment (with highlighted
+    key judgments), and \U0001F4A1 Verification methodology tip."
+  agent: other_steve_sift_fact_checker
+  context:
+  - deep_technical_research_execution
+research_methodology_evaluation:
+  description: Generate distinct technical approaches for analyzing the research findings,
+    systematically evaluate each approach's structural viability, and synthesize the
+    optimal research methodology. Apply Tree of Thoughts reasoning to identify 2-3
+    distinct analysis paradigms, stress-test each approach against hard constraints,
+    prune non-viable paths with concrete engineering justification, and detail the
+    surviving architecture.
+  expected_output: 'A Tree of Thoughts evaluation report in engineering brief format:
+    1) The Branches (2-3 distinct technical approaches named by core mechanism), 2)
+    The Stress Test (evaluation of hidden costs, latency hits, abstraction leaks for
+    each path), 3) The Pruning (explicit elimination of non-viable paths with concrete
+    engineering constraints), 4) The Surviving Architecture (detailed optimal path
+    with causal relationships and load-bearing constraints).'
+  agent: other_steve_tree_of_thoughts_evaluator
+  context:
+  - deep_technical_research_execution
+  - sift_fact_checking_and_verification
+technical_content_synthesis:
+  description: Refine and synthesize all research findings to create comprehensive
+    research deliverables. Process technical research, fact-checking results, and
+    methodology evaluation into clean, grounded analysis. Generate structured research
+    findings with metadata for potential audio processing pipeline. Output both complete
+    research synthesis and structured data format for downstream consumption.
+  expected_output: "**research_findings.md** - Complete research synthesis containing:
+    1) Executive Summary, 2) Technical Analysis, 3) Key Insights and Findings, 4)
+    Source Verification Summary, 5) Methodology Assessment, 6) Recommendations and
+    Next Steps. Include structured metadata section with: primary_topic, target_audience,
+    confidence_ratings, key_insights_list, and source_credibility_scores. Format suitable
+    for {target_audience} sophistication level and ready for potential audio pipeline
+    consumption."
+  agent: other_steve_pragmatic_editor
+  context:
+  - deep_technical_research_execution
+  - sift_fact_checking_and_verification
+  - research_methodology_evaluation
