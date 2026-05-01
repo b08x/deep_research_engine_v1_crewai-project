@@ -77,6 +77,23 @@ class AgentEditor(Vertical):
             
             yield Label("Model")
             yield Select([], id="agent-model", prompt="Select a model")
+            
+            yield Label("Fallback LLM Provider (Optional)")
+            fallback_model = self.agent_data.get("fallback_llm", "")
+            fallback_provider = None
+            if "/" in fallback_model:
+                fallback_provider = fallback_model.split("/")[0]
+            
+            yield Select(
+                [(p.capitalize(), p) for p in self.providers],
+                value=fallback_provider,
+                id="agent-fallback-provider",
+                prompt="No Fallback"
+            )
+            
+            yield Label("Fallback Model")
+            yield Select([], id="agent-fallback-model", prompt="Select a fallback model")
+            
             yield Static("", id="cap-warning")
             
             yield Label("Capability Requirements")
@@ -118,14 +135,24 @@ class AgentEditor(Vertical):
                 yield Button("Reset", variant="primary", id="reset-agent")
 
     def on_mount(self) -> None:
-        self.update_models(self.query_one("#agent-provider", Select).value)
+        self.update_primary_models(self.query_one("#agent-provider", Select).value)
+        fallback_prov = self.query_one("#agent-fallback-provider", Select).value
+        if fallback_prov:
+            self.update_fallback_models(fallback_prov)
 
     @on(Select.Changed, "#agent-provider")
     def on_provider_changed(self, event: Select.Changed) -> None:
-        self.update_models(event.value)
+        self.update_primary_models(event.value)
+
+    @on(Select.Changed, "#agent-fallback-provider")
+    def on_fallback_provider_changed(self, event: Select.Changed) -> None:
+        if event.value:
+            self.update_fallback_models(event.value)
+        else:
+            self.query_one("#agent-fallback-model", Select).set_options([])
 
     @work
-    async def update_models(self, provider: str) -> None:
+    async def update_primary_models(self, provider: str) -> None:
         model_select = self.query_one("#agent-model", Select)
         cap_warning = self.query_one("#cap-warning", Static)
         
@@ -157,6 +184,33 @@ class AgentEditor(Vertical):
             model_select.disabled = True
             model_select.prompt = f"No models found for {provider}"
             cap_warning.update("")
+
+    @work
+    async def update_fallback_models(self, provider: str) -> None:
+        model_select = self.query_one("#agent-fallback-model", Select)
+        
+        if not validate_api_key(provider):
+            model_select.disabled = True
+            model_select.prompt = f"API Key missing for {provider}"
+            return
+        
+        model_select.disabled = False
+        model_select.prompt = "Fetching models..."
+        
+        models = get_models_by_provider(provider)
+        if models:
+            options = [(m, m) for m in models]
+            model_select.set_options(options)
+            
+            # Try to set current fallback model if it matches
+            current_fallback = self.agent_data.get("fallback_llm", "")
+            if current_fallback in models:
+                model_select.value = current_fallback
+            else:
+                model_select.prompt = "Select a fallback model"
+        else:
+            model_select.disabled = True
+            model_select.prompt = f"No models found for {provider}"
 
     def _check_capabilities(self, model: str) -> None:
         """Check model capabilities against agent requirements and update warning."""
@@ -465,6 +519,16 @@ class CrewConfigApp(App):
                 self.agents_config[agent_id]["llm"] = model
             else:
                 self.agents_config[agent_id]["llm"] = f"{provider}/{model}"
+
+        fallback_provider = self.query_one("#agent-fallback-provider", Select).value
+        fallback_model = self.query_one("#agent-fallback-model", Select).value
+        if fallback_provider and fallback_model:
+            if fallback_model.startswith(f"{fallback_provider}/"):
+                self.agents_config[agent_id]["fallback_llm"] = fallback_model
+            else:
+                self.agents_config[agent_id]["fallback_llm"] = f"{fallback_provider}/{fallback_model}"
+        else:
+            self.agents_config[agent_id]["fallback_llm"] = ""
         
         self.agents_config[agent_id]["requires_capabilities"] = {
             "vision": self.query_one("#agent-cap-vision", Switch).value,
