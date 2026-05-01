@@ -6,10 +6,22 @@ from crewai.project import CrewBase, agent, crew, task
 from crewai_tools import (
 	SerperDevTool,
 	EXASearchTool,
-	ScrapeWebsiteTool,
 	ArxivPaperTool,
 	FileWriterTool
 )
+from deep_research_engine.tools.ingestion_tools import ContentIngestionTool
+from typing import Annotated, Type, Any
+from pydantic import BaseModel, PlainSerializer
+from crewai.tools.structured_tool import _serialize_schema
+
+# Monkeypatching tools to fix serialization bug with Pydantic 2.11+ and crewAI checkpoints.
+# This ensures that args_schema (which is a class) is serialized to its JSON schema 
+# instead of causing a PydanticSerializationError.
+for tool_cls in [SerperDevTool, EXASearchTool, ArxivPaperTool, FileWriterTool]:
+    tool_cls.__annotations__['args_schema'] = Annotated[
+        Type[BaseModel],
+        PlainSerializer(_serialize_schema, return_type=dict | None, when_used="json")
+    ]
 
 @CrewBase
 class DeepResearchEngineCrew:
@@ -37,7 +49,7 @@ class DeepResearchEngineCrew:
             tools=[
                 SerperDevTool(),
                 EXASearchTool(),
-                ScrapeWebsiteTool(),
+                ContentIngestionTool(),
                 FileWriterTool()
             ],
             reasoning=False,
@@ -72,7 +84,7 @@ class DeepResearchEngineCrew:
             config=self.agents_config["other_steve_deep_research_mode"],
             tools=[                SerperDevTool(),
                 EXASearchTool(),
-                ScrapeWebsiteTool(),
+                ContentIngestionTool(),
                 ArxivPaperTool(),
                 FileWriterTool()],
             reasoning=False,
@@ -107,7 +119,7 @@ class DeepResearchEngineCrew:
             config=self.agents_config["other_steve_sift_fact_checker"],
             tools=[                SerperDevTool(),
                 EXASearchTool(),
-                ScrapeWebsiteTool(),
+                ContentIngestionTool(),
                 FileWriterTool()],
             reasoning=False,
             max_reasoning_attempts=None,
