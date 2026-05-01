@@ -2,14 +2,11 @@
 import sys
 import os
 import glob
+import asyncio
 from crewai import CheckpointConfig
 from deep_research_engine.crew import DeepResearchEngineCrew
 from deep_research_engine.utils import load_yaml_config
-
-# This main file is intended to be a way for your to run your
-# crew locally, so refrain from adding unnecessary logic into this file.
-# Replace with inputs you want to test with, it will automatically
-# interpolate any tasks and agents information
+from deep_research_engine.tools.ingestion_tools import ContentIngestionTool
 
 def run():
     """
@@ -17,6 +14,35 @@ def run():
     """
     inputs = load_yaml_config("inputs.yaml")
     
+    # Check for --doc-path
+    doc_path = None
+    if "--doc-path" in sys.argv:
+        try:
+            idx = sys.argv.index("--doc-path")
+            doc_path = sys.argv[idx + 1]
+        except (IndexError, ValueError):
+            print("Error: --doc-path requires a file path argument.")
+            sys.exit(1)
+            
+    # Check for --embedding-provider
+    embedding_provider = "ollama"
+    if "--embedding-provider" in sys.argv:
+        try:
+            idx = sys.argv.index("--embedding-provider")
+            embedding_provider = sys.argv[idx + 1]
+        except (IndexError, ValueError):
+            print("Error: --embedding-provider requires a provider name.")
+            sys.exit(1)
+
+    if doc_path:
+        print(f"Ingesting document: {doc_path} (Provider: {embedding_provider})")
+        tool = ContentIngestionTool()
+        # This triggers the unified pipeline: Kreuzberg -> spaCy -> Recursive Chunking -> Two-Pass Summarization
+        processed_content = asyncio.run(tool.run_ingestion(doc_path, provider=embedding_provider))
+        # Prepend/Set the grounding_context with the processed content
+        existing_context = inputs.get("grounding_context", "")
+        inputs["grounding_context"] = f"{processed_content}\n\nExisting Context: {existing_context}"
+
     from_checkpoint = None
     if "--resume" in sys.argv:
         checkpoint_dir = ".checkpoints"

@@ -131,8 +131,9 @@ other_steve_tree_of_thoughts_evaluator:
     tool_calling: false
     structured_output: false
   llm_config:
-    temperature: 0.7
-    top_p: null
+    temperature: 0.4
+    top_p: 0.9
     top_k: null
     max_tokens: 8192
   llm: openrouter/z-ai/glm-4.7
+  fallback_llm: ''
