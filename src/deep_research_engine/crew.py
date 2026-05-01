@@ -27,6 +27,10 @@ class DeepResearchEngineCrew:
             llm_params["top_p"] = llm_config.get("top_p")
         if llm_config.get("top_k") is not None:
             llm_params["top_k"] = llm_config.get("top_k")
+        
+        fallback_model = self.agents_config["senior_research_strategist"].get("fallback_llm")
+        if fallback_model:
+            llm_params["fallbacks"] = [fallback_model]
 
         return Agent(
             config=self.agents_config["senior_research_strategist"],
@@ -60,6 +64,10 @@ class DeepResearchEngineCrew:
         if llm_config.get("top_k") is not None:
             llm_params["top_k"] = llm_config.get("top_k")
 
+        fallback_model = self.agents_config["other_steve_deep_research_mode"].get("fallback_llm")
+        if fallback_model:
+            llm_params["fallbacks"] = [fallback_model]
+
         return Agent(
             config=self.agents_config["other_steve_deep_research_mode"],
             tools=[                SerperDevTool(),
@@ -91,6 +99,10 @@ class DeepResearchEngineCrew:
         if llm_config.get("top_k") is not None:
             llm_params["top_k"] = llm_config.get("top_k")
 
+        fallback_model = self.agents_config["other_steve_sift_fact_checker"].get("fallback_llm")
+        if fallback_model:
+            llm_params["fallbacks"] = [fallback_model]
+
         return Agent(
             config=self.agents_config["other_steve_sift_fact_checker"],
             tools=[                SerperDevTool(),
@@ -121,6 +133,10 @@ class DeepResearchEngineCrew:
         if llm_config.get("top_k") is not None:
             llm_params["top_k"] = llm_config.get("top_k")
 
+        fallback_model = self.agents_config["other_steve_pragmatic_editor"].get("fallback_llm")
+        if fallback_model:
+            llm_params["fallbacks"] = [fallback_model]
+
         return Agent(
             config=self.agents_config["other_steve_pragmatic_editor"],
             tools=[FileWriterTool()],
@@ -147,6 +163,10 @@ class DeepResearchEngineCrew:
             llm_params["top_p"] = llm_config.get("top_p")
         if llm_config.get("top_k") is not None:
             llm_params["top_k"] = llm_config.get("top_k")
+
+        fallback_model = self.agents_config["other_steve_tree_of_thoughts_evaluator"].get("fallback_llm")
+        if fallback_model:
+            llm_params["fallbacks"] = [fallback_model]
 
         return Agent(
             config=self.agents_config["other_steve_tree_of_thoughts_evaluator"],
@@ -219,8 +239,8 @@ class DeepResearchEngineCrew:
             tasks=self.tasks,  # Automatically created by the @task decorator
             process=Process.sequential,
             verbose=True,
-
-            chat_llm=LLM(model="openai/google/gemini-2.5-flash"),
+            checkpoint=True,
+            chat_llm="google/gemini-1.5-flash",
         )
 
 
