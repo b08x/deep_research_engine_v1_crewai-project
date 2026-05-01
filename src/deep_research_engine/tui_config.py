@@ -26,7 +26,7 @@ from textual.screen import Screen
 from textual.message import Message
 
 from .utils import load_yaml_config, save_yaml_config, validate_api_key, get_env_var
-from .models_fetcher import get_models_by_provider, get_all_providers
+from .models_fetcher import get_models_by_provider, get_all_providers, get_model_capabilities
 
 class AgentEditor(Vertical):
     """A widget for editing an agent's profile."""
@@ -35,7 +35,20 @@ class AgentEditor(Vertical):
         super().__init__(**kwargs)
         self.agent_id = agent_id
         self.agent_data = agent_data
-        self.providers = ["openai", "anthropic", "google", "groq", "mistral"]
+        self.providers = ["openai", "anthropic", "google", "groq", "mistral", "openrouter"]
+        capabilities = agent_data.get("requires_capabilities", {})
+        self.capability_requirements = {
+            "vision": capabilities.get("vision", False),
+            "reasoning": capabilities.get("reasoning", False),
+            "tool_calling": capabilities.get("tool_calling", False),
+            "structured_output": capabilities.get("structured_output", False),
+        }
+        self.llm_config = self.agent_data.get("llm_config", {
+            "temperature": 0.7,
+            "top_p": 0.9,
+            "top_k": None,
+            "max_tokens": 8192,
+        })
         
     def compose(self) -> ComposeResult:
         with ScrollableContainer():
@@ -64,6 +77,41 @@ class AgentEditor(Vertical):
             
             yield Label("Model")
             yield Select([], id="agent-model", prompt="Select a model")
+            yield Static("", id="cap-warning")
+            
+            yield Label("Capability Requirements")
+            with Vertical(classes="cap-group"):
+                with Horizontal():
+                    yield Switch(self.capability_requirements["vision"], id="agent-cap-vision")
+                    yield Label(" Vision Support", classes="cap-label")
+                    yield Switch(self.capability_requirements["reasoning"], id="agent-cap-reasoning")
+                    yield Label(" Reasoning Support", classes="cap-label")
+                with Horizontal():
+                    yield Switch(self.capability_requirements["tool_calling"], id="agent-cap-tool-calling")
+                    yield Label(" Tool Calling", classes="cap-label")
+                    yield Switch(self.capability_requirements["structured_output"], id="agent-cap-structured-output")
+                    yield Label(" Structured Output", classes="cap-label")
+            
+            yield Label("LLM Configuration")
+            with Horizontal(classes="llm-param-row"):
+                with Vertical(classes="llm-param-col"):
+                    yield Label("Temperature")
+                    temp = self.llm_config.get("temperature")
+                    yield Input(value=str(temp if temp is not None else 0.7), placeholder="0.7", type="number", id="agent-llm-temperature")
+                with Vertical(classes="llm-param-col"):
+                    yield Label("Top P")
+                    tp = self.llm_config.get("top_p")
+                    yield Input(value=str(tp if tp is not None else 0.9), placeholder="0.9", type="number", id="agent-llm-top-p")
+            
+            with Horizontal(classes="llm-param-row"):
+                with Vertical(classes="llm-param-col"):
+                    yield Label("Top K")
+                    tk = self.llm_config.get("top_k")
+                    yield Input(value=str(tk if tk is not None else ""), placeholder="None", type="number", id="agent-llm-top-k")
+                with Vertical(classes="llm-param-col"):
+                    yield Label("Max Tokens")
+                    mt = self.llm_config.get("max_tokens")
+                    yield Input(value=str(mt if mt is not None else 8192), placeholder="8192", type="number", id="agent-llm-max-tokens")
             
             with Horizontal(id="action-buttons"):
                 yield Button("Save Changes", variant="success", id="save-agent")
@@ -79,6 +127,11 @@ class AgentEditor(Vertical):
     @work
     async def update_models(self, provider: str) -> None:
         model_select = self.query_one("#agent-model", Select)
+        cap_warning = self.query_one("#cap-warning", Static)
+        
+        # Reset warning when provider changes
+        cap_warning.update("")
+        
         if not validate_api_key(provider):
             model_select.disabled = True
             model_select.prompt = f"API Key missing for {provider}"
@@ -96,11 +149,51 @@ class AgentEditor(Vertical):
             current_llm = self.agent_data.get("llm", "")
             if current_llm in models:
                 model_select.value = current_llm
+                self._check_capabilities(current_llm)
             else:
                 model_select.prompt = "Select a model"
+                cap_warning.update("")
         else:
             model_select.disabled = True
             model_select.prompt = f"No models found for {provider}"
+            cap_warning.update("")
+
+    def _check_capabilities(self, model: str) -> None:
+        """Check model capabilities against agent requirements and update warning."""
+        cap_warning = self.query_one("#cap-warning", Static)
+        
+        if not model:
+            cap_warning.update("")
+            return
+        
+        caps = get_model_capabilities(model)
+        if not caps:
+            cap_warning.update("")
+            return
+        
+        warnings = []
+        
+        if self.capability_requirements.get("vision") and not caps.get("supports_vision"):
+            warnings.append("[yellow]Model does not support vision[/yellow]")
+        
+        if self.capability_requirements.get("reasoning") and not caps.get("supports_reasoning"):
+            warnings.append("[yellow]Model does not support reasoning[/yellow]")
+        
+        if self.capability_requirements.get("tool_calling") and not caps.get("supports_function_calling"):
+            warnings.append("[yellow]Model does not support tool calling[/yellow]")
+        
+        if self.capability_requirements.get("structured_output") and not caps.get("supports_response_schema"):
+            warnings.append("[yellow]Model does not support structured output[/yellow]")
+        
+        if warnings:
+            cap_warning.update("[red]Capability Warning:[/red] " + " | ".join(warnings))
+        else:
+            cap_warning.update("[green]All capabilities satisfied[/green]")
+
+    @on(Select.Changed, "#agent-model")
+    def on_model_changed(self, event: Select.Changed) -> None:
+        if event.value:
+            self._check_capabilities(event.value)
 
 class TaskEditor(Vertical):
     """A widget for editing a task's definition."""
@@ -217,6 +310,7 @@ class CrewConfigApp(App):
     
     .editor-pane {
         width: 1fr;
+        height: 100%;
         padding-left: 2;
     }
     
@@ -232,6 +326,30 @@ class CrewConfigApp(App):
         margin: 1;
         background: #16162a;
         border: solid #3b3b5c;
+    }
+
+    .cap-group {
+        height: auto;
+        margin-bottom: 1;
+        border: solid #3b3b5c 10%;
+        padding: 1;
+    }
+
+    .llm-param-row {
+        height: auto;
+        margin-bottom: 1;
+    }
+
+    .llm-param-col {
+        width: 1fr;
+        margin-right: 2;
+    }
+
+    .cap-label {
+        width: 1fr;
+        margin-left: 1;
+        margin-top: 1;
+        color: #8080a0;
     }
     """
     
@@ -281,7 +399,7 @@ class CrewConfigApp(App):
         settings_pane.remove_children()
         
         settings_pane.mount(Label("[bold cyan]API Key Status Check[/bold cyan]"))
-        providers = ["OPENAI", "ANTHROPIC", "GEMINI", "GROQ", "MISTRAL"]
+        providers = ["OPENAI", "ANTHROPIC", "GEMINI", "GROQ", "MISTRAL", "OPENROUTER"]
         for p in providers:
             key = f"{p}_API_KEY"
             val = get_env_var(key)
@@ -319,6 +437,23 @@ class CrewConfigApp(App):
         model = self.query_one("#agent-model", Select).value
         if provider and model:
             self.agents_config[agent_id]["llm"] = f"{provider}/{model}"
+        
+        self.agents_config[agent_id]["requires_capabilities"] = {
+            "vision": self.query_one("#agent-cap-vision", Switch).value,
+            "reasoning": self.query_one("#agent-cap-reasoning", Switch).value,
+            "tool_calling": self.query_one("#agent-cap-tool-calling", Switch).value,
+            "structured_output": self.query_one("#agent-cap-structured-output", Switch).value,
+        }
+        
+        top_k_input = self.query_one("#agent-llm-top-k", Input).value
+        top_k = top_k_input if top_k_input else None
+        
+        self.agents_config[agent_id]["llm_config"] = {
+            "temperature": float(self.query_one("#agent-llm-temperature", Input).value),
+            "top_p": float(self.query_one("#agent-llm-top-p", Input).value),
+            "top_k": float(top_k) if top_k is not None else None,
+            "max_tokens": int(self.query_one("#agent-llm-max-tokens", Input).value),
+        }
         
         save_yaml_config("agents.yaml", self.agents_config)
         self.notify(f"Agent {agent_id} saved successfully!")
