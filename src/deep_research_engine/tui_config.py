@@ -82,14 +82,14 @@ class AgentEditor(Vertical):
             yield Label("Capability Requirements")
             with Vertical(classes="cap-group"):
                 with Horizontal():
-                    yield Switch(self.capability_requirements["vision"], id="agent-cap-vision")
+                    yield Switch(value=self.capability_requirements["vision"], id="agent-cap-vision")
                     yield Label(" Vision Support", classes="cap-label")
-                    yield Switch(self.capability_requirements["reasoning"], id="agent-cap-reasoning")
+                    yield Switch(value=self.capability_requirements["reasoning"], id="agent-cap-reasoning")
                     yield Label(" Reasoning Support", classes="cap-label")
                 with Horizontal():
-                    yield Switch(self.capability_requirements["tool_calling"], id="agent-cap-tool-calling")
+                    yield Switch(value=self.capability_requirements["tool_calling"], id="agent-cap-tool-calling")
                     yield Label(" Tool Calling", classes="cap-label")
-                    yield Switch(self.capability_requirements["structured_output"], id="agent-cap-structured-output")
+                    yield Switch(value=self.capability_requirements["structured_output"], id="agent-cap-structured-output")
                     yield Label(" Structured Output", classes="cap-label")
             
             yield Label("LLM Configuration")
@@ -225,6 +225,23 @@ class TaskEditor(Vertical):
                 yield Button("Save Changes", variant="success", id="save-task")
                 yield Button("Reset", variant="primary", id="reset-task")
 
+class InputEditor(Vertical):
+    """A widget for editing run input parameters."""
+    
+    def __init__(self, inputs_data: Dict, **kwargs):
+        super().__init__(**kwargs)
+        self.inputs_data = inputs_data
+        
+    def compose(self) -> ComposeResult:
+        with ScrollableContainer():
+            yield Label("[bold cyan]Run Parameters[/bold cyan]")
+            for key, value in self.inputs_data.items():
+                yield Label(key.replace("_", " ").capitalize())
+                yield TextArea(str(value), id=f"input-{key}", classes="input-textarea")
+            
+            with Horizontal(id="action-buttons"):
+                yield Button("Save Parameters", variant="success", id="save-inputs")
+
 class CrewConfigApp(App):
     """A Textual app to configure CrewAI agents and tasks."""
     
@@ -280,12 +297,12 @@ class CrewConfigApp(App):
         border: none;
     }
     
-    Button#save-agent, Button#save-task {
+    Button#save-agent, Button#save-task, Button#save-inputs {
         background: #008800;
         color: white;
     }
     
-    Button#save-agent:hover, Button#save-task:hover {
+    Button#save-agent:hover, Button#save-task:hover, Button#save-inputs:hover {
         background: #00aa00;
     }
     
@@ -314,7 +331,7 @@ class CrewConfigApp(App):
         padding-left: 2;
     }
     
-    #agent-goal, #agent-backstory, #task-desc, #task-output {
+    #agent-goal, #agent-backstory, #task-desc, #task-output, .input-textarea {
         height: 8;
     }
     
@@ -372,6 +389,9 @@ class CrewConfigApp(App):
                         yield ListView(id="task-list")
                         yield Vertical(id="task-editor-container", classes="editor-pane")
                 
+                with TabPane("Run Parameters", id="inputs-tab"):
+                    yield Vertical(id="inputs-editor-container")
+
                 with TabPane("Settings", id="settings-tab"):
                     yield Vertical(id="settings-pane")
         yield Footer()
@@ -383,6 +403,7 @@ class CrewConfigApp(App):
     def load_data(self) -> None:
         self.agents_config = load_yaml_config("agents.yaml")
         self.tasks_config = load_yaml_config("tasks.yaml")
+        self.inputs_config = load_yaml_config("inputs.yaml")
         
         agent_list = self.query_one("#agent-list", ListView)
         agent_list.clear()
@@ -393,6 +414,10 @@ class CrewConfigApp(App):
         task_list.clear()
         for task_id in self.tasks_config:
             task_list.append(ListItem(Label(task_id), id=f"list-{task_id}"))
+
+        inputs_container = self.query_one("#inputs-editor-container")
+        inputs_container.remove_children()
+        inputs_container.mount(InputEditor(self.inputs_config))
 
     def refresh_settings(self) -> None:
         settings_pane = self.query_one("#settings-pane")
@@ -436,7 +461,10 @@ class CrewConfigApp(App):
         provider = self.query_one("#agent-provider", Select).value
         model = self.query_one("#agent-model", Select).value
         if provider and model:
-            self.agents_config[agent_id]["llm"] = f"{provider}/{model}"
+            if model.startswith(f"{provider}/"):
+                self.agents_config[agent_id]["llm"] = model
+            else:
+                self.agents_config[agent_id]["llm"] = f"{provider}/{model}"
         
         self.agents_config[agent_id]["requires_capabilities"] = {
             "vision": self.query_one("#agent-cap-vision", Switch).value,
@@ -470,9 +498,18 @@ class CrewConfigApp(App):
         save_yaml_config("tasks.yaml", self.tasks_config)
         self.notify(f"Task {task_id} saved successfully!")
 
+    @on(Button.Pressed, "#save-inputs")
+    def on_save_inputs(self, event: Button.Pressed) -> None:
+        for key in self.inputs_config:
+            self.inputs_config[key] = self.query_one(f"#input-{key}", TextArea).text
+        
+        save_yaml_config("inputs.yaml", self.inputs_config)
+        self.notify("Run parameters saved successfully!")
+
     def action_save_all(self) -> None:
         save_yaml_config("agents.yaml", self.agents_config)
         save_yaml_config("tasks.yaml", self.tasks_config)
+        save_yaml_config("inputs.yaml", self.inputs_config)
         self.notify("All configurations saved!")
 
 def main():

@@ -19,10 +19,11 @@ senior_research_strategist:
     tool_calling: true
     structured_output: false
   llm_config:
-    temperature: 0.7
-    top_p: null
+    temperature: 0.2
+    top_p: 0.9
     top_k: null
     max_tokens: 8192
+  llm: openrouter/z-ai/glm-4.7-flash
 other_steve_deep_research_mode:
   role: Other Steve (Deep Research Mode)
   goal: Execute deep technical research by systematically filtering out marketing
@@ -47,10 +48,11 @@ other_steve_deep_research_mode:
     tool_calling: true
     structured_output: false
   llm_config:
-    temperature: 0.7
-    top_p: null
+    temperature: 0.4
+    top_p: 0.9
     top_k: null
     max_tokens: 8192
+  llm: mistral/mistral-medium-latest
 other_steve_sift_fact_checker:
   role: Other Steve (SIFT Fact-Checker)
   goal: Process claims about {primary_topic} strictly through rigorous SIFT evaluation
@@ -75,9 +77,10 @@ other_steve_sift_fact_checker:
     structured_output: false
   llm_config:
     temperature: 0.7
-    top_p: null
+    top_p: 0.9
     top_k: null
     max_tokens: 8192
+  llm: openrouter/z-ai/glm-4.7
 other_steve_pragmatic_editor:
   role: Other Steve (Pragmatic Editor)
   goal: Refine and synthesize research content by applying systematic precision filtering
@@ -101,9 +104,10 @@ other_steve_pragmatic_editor:
     structured_output: false
   llm_config:
     temperature: 0.7
-    top_p: null
+    top_p: 0.9
     top_k: null
     max_tokens: 8192
+  llm: groq/llama-3.3-70b-versatile
 other_steve_tree_of_thoughts_evaluator:
   role: Other Steve (Tree of Thoughts Evaluator)
   goal: Generate distinct technical approaches to analyzing {primary_topic}, objectively
@@ -127,8 +131,8 @@ other_steve_tree_of_thoughts_evaluator:
     tool_calling: false
     structured_output: false
   llm_config:
-    model: openrouter/openrouter/z-ai/glm-5
     temperature: 0.7
     top_p: null
     top_k: null
     max_tokens: 8192
+  llm: openrouter/z-ai/glm-4.7
