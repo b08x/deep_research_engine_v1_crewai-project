@@ -42,6 +42,7 @@ def validate_api_key(provider: str) -> bool:
         "gemini": "GEMINI_API_KEY",
         "groq": "GROQ_API_KEY",
         "mistral": "MISTRAL_API_KEY",
+        "openrouter": "OPENROUTER_API_KEY",
     }
     key_name = key_map.get(provider.lower())
     if not key_name:

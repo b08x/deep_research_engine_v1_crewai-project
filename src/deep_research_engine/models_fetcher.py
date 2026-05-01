@@ -61,3 +61,37 @@ def get_all_providers() -> List[str]:
             if p:
                 providers.add(p.lower())
     return sorted(list(providers))
+
+def get_model_capabilities(model_name: str) -> dict:
+    """Get capability flags for a specific model.
+    
+    Returns dict with keys:
+      - supports_vision: bool
+      - supports_reasoning: bool  
+      - supports_function_calling: bool
+      - supports_response_schema: bool (for structured output)
+      - max_input_tokens: int
+      - max_output_tokens: int
+      - mode: str (e.g. 'chat')
+    
+    Returns empty dict if model not found.
+    """
+    data = fetch_latest_models()
+    
+    if model_name not in data:
+        return {}
+    
+    config = data[model_name]
+    if not isinstance(config, dict):
+        return {}
+    
+    # Map LiteLLM fields to our output keys
+    return {
+        "supports_vision": config.get("supports_vision", False),
+        "supports_reasoning": config.get("supports_reasoning", False),
+        "supports_function_calling": config.get("supports_function_calling", False),
+        "supports_response_schema": config.get("supports_response_schema", False),
+        "max_input_tokens": config.get("context_window", 0),
+        "max_output_tokens": config.get("max_tokens", 0),
+        "mode": config.get("mode", "chat"),
+    }
