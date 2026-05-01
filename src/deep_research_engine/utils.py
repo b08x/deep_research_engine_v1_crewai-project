@@ -1,7 +1,65 @@
 import os
 import yaml
+import hashlib
+import redis
+import logging
 from pathlib import Path
+from typing import Optional, Any
 from dotenv import load_dotenv, set_key
+
+logger = logging.getLogger(__name__)
+
+class RedisCache:
+    """A Redis-based caching utility with fail-open logic."""
+    
+    def __init__(self, host: str = None, port: int = 6379, db: int = 0):
+        self.host = host or get_env_var("REDIS_HOST") or "localhost"
+        self.port = int(get_env_var("REDIS_PORT") or port)
+        self.db = int(get_env_var("REDIS_DB") or db)
+        self.client: Optional[redis.Redis] = None
+        self._connected = False
+        self._try_connect()
+
+    def _try_connect(self):
+        try:
+            self.client = redis.Redis(
+                host=self.host, 
+                port=self.port, 
+                db=self.db, 
+                socket_timeout=2.0,
+                socket_connect_timeout=2.0,
+                decode_responses=True
+            )
+            self.client.ping()
+            self._connected = True
+        except (redis.ConnectionError, redis.TimeoutError) as e:
+            logger.warning(f"Redis cache unavailable at {self.host}:{self.port}. Failing open. Error: {e}")
+            self._connected = False
+            self.client = None
+
+    def _get_key(self, identifier: str) -> str:
+        """Generate a hashed key: search:cache:<sha256(identifier)>"""
+        hashed = hashlib.sha256(identifier.encode()).hexdigest()
+        return f"search:cache:{hashed}"
+
+    def get(self, identifier: str) -> Optional[str]:
+        """Retrieve a value from the cache. Fails open (returns None) if Redis is down."""
+        if not self._connected:
+            return None
+        try:
+            return self.client.get(self._get_key(identifier))
+        except Exception as e:
+            logger.warning(f"Redis get failed: {e}")
+            return None
+
+    def set(self, identifier: str, value: str, ttl: int = 3600):
+        """Store a value in the cache. Fails open if Redis is down."""
+        if not self._connected:
+            return
+        try:
+            self.client.set(self._get_key(identifier), value, ex=ttl)
+        except Exception as e:
+            logger.warning(f"Redis set failed: {e}")
 
 def get_config_path(filename: str) -> Path:
     """Get the absolute path to a configuration file."""
