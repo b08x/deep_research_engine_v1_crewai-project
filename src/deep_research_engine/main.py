@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 import sys
+import os
+import glob
+from crewai import CheckpointConfig
 from deep_research_engine.crew import DeepResearchEngineCrew
 from deep_research_engine.utils import load_yaml_config
 
@@ -13,7 +16,22 @@ def run():
     Run the crew.
     """
     inputs = load_yaml_config("inputs.yaml")
-    DeepResearchEngineCrew().crew().kickoff(inputs=inputs)
+    
+    from_checkpoint = None
+    if "--resume" in sys.argv:
+        checkpoint_dir = ".checkpoints"
+        if os.path.exists(checkpoint_dir):
+            checkpoints = glob.glob(os.path.join(checkpoint_dir, "*.json"))
+            if checkpoints:
+                latest_checkpoint = max(checkpoints, key=os.path.getctime)
+                print(f"Resuming from checkpoint: {latest_checkpoint}")
+                from_checkpoint = CheckpointConfig(restore_from=latest_checkpoint)
+            else:
+                print("No checkpoints found in .checkpoints/")
+        else:
+            print("Checkpoint directory .checkpoints/ not found.")
+
+    DeepResearchEngineCrew().crew().kickoff(inputs=inputs, from_checkpoint=from_checkpoint)
 
 
 def train():
