@@ -889,7 +889,7 @@
       "label": ".add_documents()",
       "file_type": "code",
       "source_file": "vector_store.py",
-      "source_location": "L102",
+      "source_location": "L108",
       "id": "deep_research_engine_vector_store_vectorstoremanager_add_documents",
       "community": 4,
       "norm_label": ".add_documents()"
@@ -898,7 +898,7 @@
       "label": "._export_to_graphify()",
       "file_type": "code",
       "source_file": "vector_store.py",
-      "source_location": "L120",
+      "source_location": "L126",
       "id": "deep_research_engine_vector_store_vectorstoremanager_export_to_graphify",
       "community": 4,
       "norm_label": "._export_to_graphify()"
@@ -907,7 +907,7 @@
       "label": ".search()",
       "file_type": "code",
       "source_file": "vector_store.py",
-      "source_location": "L136",
+      "source_location": "L142",
       "id": "deep_research_engine_vector_store_vectorstoremanager_search",
       "community": 4,
       "norm_label": ".search()"
@@ -952,28 +952,28 @@
       "label": "Adds context-enriched chunks to the index.",
       "file_type": "rationale",
       "source_file": "vector_store.py",
-      "source_location": "L103",
+      "source_location": "L109",
+      "id": "deep_research_engine_vector_store_rationale_109",
       "community": 4,
-      "norm_label": "adds context-enriched chunks to the index.",
-      "id": "deep_research_engine_vector_store_rationale_103"
+      "norm_label": "adds context-enriched chunks to the index."
     },
     {
       "label": "Exports chunks to graphify-out/ folder format.",
       "file_type": "rationale",
       "source_file": "vector_store.py",
-      "source_location": "L121",
+      "source_location": "L127",
+      "id": "deep_research_engine_vector_store_rationale_127",
       "community": 4,
-      "norm_label": "exports chunks to graphify-out/ folder format.",
-      "id": "deep_research_engine_vector_store_rationale_121"
+      "norm_label": "exports chunks to graphify-out/ folder format."
     },
     {
       "label": "Performs a semantic search.",
       "file_type": "rationale",
       "source_file": "vector_store.py",
-      "source_location": "L137",
+      "source_location": "L143",
+      "id": "deep_research_engine_vector_store_rationale_143",
       "community": 4,
-      "norm_label": "performs a semantic search.",
-      "id": "deep_research_engine_vector_store_rationale_137"
+      "norm_label": "performs a semantic search."
     },
     {
       "label": "__init__.py",
@@ -1156,11 +1156,38 @@
       "id": "tools_ingestion_tools_rationale_185"
     },
     {
+      "label": "Adds context-enriched chunks to the index.",
+      "file_type": "rationale",
+      "source_file": "vector_store.py",
+      "source_location": "L103",
+      "community": 10,
+      "norm_label": "adds context-enriched chunks to the index.",
+      "id": "deep_research_engine_vector_store_rationale_103"
+    },
+    {
+      "label": "Exports chunks to graphify-out/ folder format.",
+      "file_type": "rationale",
+      "source_file": "vector_store.py",
+      "source_location": "L121",
+      "community": 11,
+      "norm_label": "exports chunks to graphify-out/ folder format.",
+      "id": "deep_research_engine_vector_store_rationale_121"
+    },
+    {
+      "label": "Performs a semantic search.",
+      "file_type": "rationale",
+      "source_file": "vector_store.py",
+      "source_location": "L137",
+      "community": 12,
+      "norm_label": "performs a semantic search.",
+      "id": "deep_research_engine_vector_store_rationale_137"
+    },
+    {
       "label": "DeepResearchEngine crew",
       "file_type": "rationale",
       "source_file": "crew.py",
       "source_location": "L16",
-      "community": 10,
+      "community": 13,
       "norm_label": "deepresearchengine crew",
       "id": "deep_research_engine_crew_rationale_16"
     },
@@ -1169,7 +1196,7 @@
       "file_type": "rationale",
       "source_file": "crew.py",
       "source_location": "L235",
-      "community": 11,
+      "community": 14,
       "norm_label": "creates the deepresearchengine crew",
       "id": "deep_research_engine_crew_rationale_235"
     },
@@ -1205,7 +1232,7 @@
       "file_type": "rationale",
       "source_file": "utils.py",
       "source_location": "L7",
-      "community": 12,
+      "community": 15,
       "norm_label": "get the absolute path to a configuration file.",
       "id": "deep_research_engine_utils_rationale_7"
     },
@@ -1214,7 +1241,7 @@
       "file_type": "rationale",
       "source_file": "utils.py",
       "source_location": "L11",
-      "community": 13,
+      "community": 16,
       "norm_label": "load a yaml configuration file.",
       "id": "deep_research_engine_utils_rationale_11"
     },
@@ -1223,7 +1250,7 @@
       "file_type": "rationale",
       "source_file": "utils.py",
       "source_location": "L19",
-      "community": 14,
+      "community": 17,
       "norm_label": "save a dictionary to a yaml configuration file.",
       "id": "deep_research_engine_utils_rationale_19"
     },
@@ -1232,7 +1259,7 @@
       "file_type": "rationale",
       "source_file": "utils.py",
       "source_location": "L25",
-      "community": 15,
+      "community": 18,
       "norm_label": "get an environment variable, loading from .env if necessary.",
       "id": "deep_research_engine_utils_rationale_25"
     },
@@ -1241,7 +1268,7 @@
       "file_type": "rationale",
       "source_file": "utils.py",
       "source_location": "L30",
-      "community": 16,
+      "community": 19,
       "norm_label": "set an environment variable in the .env file.",
       "id": "deep_research_engine_utils_rationale_30"
     },
@@ -1250,7 +1277,7 @@
       "file_type": "rationale",
       "source_file": "utils.py",
       "source_location": "L37",
-      "community": 17,
+      "community": 20,
       "norm_label": "check if the api key for a given provider exists in .env.",
       "id": "deep_research_engine_utils_rationale_37"
     },
@@ -1259,7 +1286,7 @@
       "file_type": "rationale",
       "source_file": "tui_config.py",
       "source_location": "L216",
-      "community": 18,
+      "community": 21,
       "norm_label": "check model capabilities against agent requirements and update warning.",
       "id": "deep_research_engine_tui_config_rationale_216"
     },
@@ -1268,7 +1295,7 @@
       "file_type": "rationale",
       "source_file": "tui_config.py",
       "source_location": "L253",
-      "community": 19,
+      "community": 22,
       "norm_label": "a widget for editing a task's definition.",
       "id": "deep_research_engine_tui_config_rationale_253"
     },
@@ -1277,7 +1304,7 @@
       "file_type": "rationale",
       "source_file": "tui_config.py",
       "source_location": "L283",
-      "community": 20,
+      "community": 23,
       "norm_label": "a widget for editing run input parameters.",
       "id": "deep_research_engine_tui_config_rationale_283"
     },
@@ -1286,7 +1313,7 @@
       "file_type": "rationale",
       "source_file": "tui_config.py",
       "source_location": "L300",
-      "community": 21,
+      "community": 24,
       "norm_label": "a textual app to configure crewai agents and tasks.",
       "id": "deep_research_engine_tui_config_rationale_300"
     },
@@ -1295,7 +1322,7 @@
       "file_type": "rationale",
       "source_file": "crew.py",
       "source_location": "L20",
-      "community": 22,
+      "community": 25,
       "norm_label": "deepresearchengine crew",
       "id": "deep_research_engine_crew_rationale_20"
     },
@@ -1304,7 +1331,7 @@
       "file_type": "rationale",
       "source_file": "crew.py",
       "source_location": "L215",
-      "community": 23,
+      "community": 26,
       "norm_label": "creates the deepresearchengine crew",
       "id": "deep_research_engine_crew_rationale_215"
     },
@@ -1340,7 +1367,7 @@
       "file_type": "rationale",
       "source_file": "tools/custom_tool.py",
       "source_location": "L7",
-      "community": 24,
+      "community": 27,
       "norm_label": "input schema for mycustomtool.",
       "id": "tools_custom_tool_rationale_7"
     },
@@ -1349,7 +1376,7 @@
       "file_type": "document",
       "source_file": "src/deep_research_engine/config/agents.yaml",
       "source_location": null,
-      "community": 25,
+      "community": 28,
       "norm_label": "src/deep_research_engine/config/agents.yaml",
       "id": "file_agents_yaml"
     },
@@ -1358,7 +1385,7 @@
       "file_type": "document",
       "source_file": "src/deep_research_engine/config/tasks.yaml",
       "source_location": null,
-      "community": 26,
+      "community": 29,
       "norm_label": "src/deep_research_engine/config/tasks.yaml",
       "id": "file_tasks_yaml"
     },
@@ -1367,7 +1394,7 @@
       "file_type": "document",
       "source_file": "AGENTS.md",
       "source_location": null,
-      "community": 27,
+      "community": 30,
       "norm_label": "agents.md",
       "id": "file_agents_md"
     },
@@ -1376,7 +1403,7 @@
       "file_type": "document",
       "source_file": "README.md",
       "source_location": null,
-      "community": 28,
+      "community": 31,
       "norm_label": "readme.md",
       "id": "file_readme_md"
     },
@@ -1520,7 +1547,7 @@
       "file_type": "concept",
       "source_file": "src/deep_research_engine/crew.py",
       "source_location": null,
-      "community": 29,
+      "community": 32,
       "norm_label": "openai/google/gemini-2.5-flash",
       "id": "llm_gemini"
     },
@@ -3579,7 +3606,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "vector_store.py",
-      "source_location": "L102",
+      "source_location": "L108",
       "weight": 1.0,
       "_src": "deep_research_engine_vector_store_vectorstoremanager",
       "_tgt": "deep_research_engine_vector_store_vectorstoremanager_add_documents",
@@ -3591,7 +3618,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "vector_store.py",
-      "source_location": "L120",
+      "source_location": "L126",
       "weight": 1.0,
       "_src": "deep_research_engine_vector_store_vectorstoremanager",
       "_tgt": "deep_research_engine_vector_store_vectorstoremanager_export_to_graphify",
@@ -3603,7 +3630,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "vector_store.py",
-      "source_location": "L136",
+      "source_location": "L142",
       "weight": 1.0,
       "_src": "deep_research_engine_vector_store_vectorstoremanager",
       "_tgt": "deep_research_engine_vector_store_vectorstoremanager_search",
@@ -3819,7 +3846,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "vector_store.py",
-      "source_location": "L118",
+      "source_location": "L124",
       "weight": 1.0,
       "_src": "deep_research_engine_vector_store_vectorstoremanager_add_documents",
       "_tgt": "deep_research_engine_vector_store_vectorstoremanager_export_to_graphify",
@@ -3831,36 +3858,36 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vector_store.py",
-      "source_location": "L103",
+      "source_location": "L109",
       "weight": 1.0,
-      "_src": "deep_research_engine_vector_store_rationale_103",
+      "_src": "deep_research_engine_vector_store_rationale_109",
       "_tgt": "deep_research_engine_vector_store_vectorstoremanager_add_documents",
       "source": "deep_research_engine_vector_store_vectorstoremanager_add_documents",
-      "target": "deep_research_engine_vector_store_rationale_103",
+      "target": "deep_research_engine_vector_store_rationale_109",
       "confidence_score": 1.0
     },
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vector_store.py",
-      "source_location": "L121",
+      "source_location": "L127",
       "weight": 1.0,
-      "_src": "deep_research_engine_vector_store_rationale_121",
+      "_src": "deep_research_engine_vector_store_rationale_127",
       "_tgt": "deep_research_engine_vector_store_vectorstoremanager_export_to_graphify",
       "source": "deep_research_engine_vector_store_vectorstoremanager_export_to_graphify",
-      "target": "deep_research_engine_vector_store_rationale_121",
+      "target": "deep_research_engine_vector_store_rationale_127",
       "confidence_score": 1.0
     },
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vector_store.py",
-      "source_location": "L137",
+      "source_location": "L143",
       "weight": 1.0,
-      "_src": "deep_research_engine_vector_store_rationale_137",
+      "_src": "deep_research_engine_vector_store_rationale_143",
       "_tgt": "deep_research_engine_vector_store_vectorstoremanager_search",
       "source": "deep_research_engine_vector_store_vectorstoremanager_search",
-      "target": "deep_research_engine_vector_store_rationale_137",
+      "target": "deep_research_engine_vector_store_rationale_143",
       "confidence_score": 1.0
     },
     {

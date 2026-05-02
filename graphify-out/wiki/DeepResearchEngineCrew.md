@@ -1,14 +1,14 @@
 # DeepResearchEngineCrew
 
-> God node · 9 connections · `crew.py`
+> God node · 10 connections · `crew.py`
 
 ## Connections by Relation
 
 ### calls
-- [[train()]] `INFERRED`
-- [[replay()]] `INFERRED`
-- [[test()]] `INFERRED`
 - [[run()]] `INFERRED`
+- [[train()]] `INFERRED`
+- [[test()]] `INFERRED`
+- [[replay()]] `INFERRED`
 
 ### contains
 - [[crew.py]] `EXTRACTED`
@@ -17,6 +17,7 @@
 - [[DeepResearchEngine crew]] `EXTRACTED`
 
 ### uses
+- [[ContentIngestionTool]] `INFERRED`
 - [[Train the crew for a given number of iterations.]] `INFERRED`
 - [[Replay the crew execution from a specific task.]] `INFERRED`
 - [[Test the crew execution and returns the results.]] `INFERRED`
