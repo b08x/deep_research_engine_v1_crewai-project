@@ -13,7 +13,7 @@ dependencies = [
     "trafilatura",
     "spacy",
     "spacy-llm",
-    "txtai[pipeline,similarity,ann]",
+    "txtai[ann,pipeline,similarity]",
     "redis",
     "kreuzberg",
 ]
@@ -36,3 +36,8 @@ type = "crew"
 
 [tool.uv]
 override-dependencies = ["litellm<=1.82.6"]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+]
