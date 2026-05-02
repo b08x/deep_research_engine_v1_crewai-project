@@ -8,3 +8,11 @@ manifest.json
 .codemap/
 **/graphify-out/obsidian/*
 .vector*
+**/graphify-out/preprocessed/*
+output/
+**/graphify-out/cost.json
+
+.graphify_analysis.json
+.graphify_extract.json
+.graphify_incremental.json
+.graphify_old.json

@@ -1,34 +1,11 @@
-primary_topic: Practical integration of Microsoft Copilot or Claude Code with ServiceNow
-  ITSM MCP, screenshot analysis, AutoHotkey integration, structured prompt engineering
-  for incident creation, and security/compliance in healthcare IT for an Overnight
-  Radiology IT Support Engineer.
-sub_nodes: prompt-engineering, service now, mcp configuration, claude desktop
+primary_topic: user training program Microsoft Copilot with ServiceNow ITSM MCP, screenshot
+  analysis, AutoHotkey integration, structured prompt engineering for incident creation,
+  and security/compliance in healthcare IT for an Overnight Radiology IT Support Engineer.
+sub_nodes: 'prompt-engineering, service now, model context protocol configuration,
+  ms copilot, cognizant '
 target_audience: Senior IT Support Engineers
-grounding_context: 'Revised Deliverable Plan (Focusing on AI Desktop Assistants)
-
-  Based on this deep dive, here''s how your plan could be adapted:
-
-
-  Phase 1: Get ServiceNow API access
-
-
-  Phase 2: Set up custom MCP tool with an MCP Server (This exposes its capabilities
-  to AI)
-
-
-  Phase 3: Test ServiceNow API and MCP Server with curl (Validate tool exposure)
-
-
-  Phase 4: Explore MS Copilot Studio/ServiceNow AI Platform capabilities (Identify
-  how to integrate with ServiceNow via official connectors or Claude Code)
-
-
-  Phase 5: Design structured prompts for ServiceNow incident creation (Focus on JSON
-  output format for severity, category, description)
-
-
-  Phase 6: Develop AutoHotkey script for screenshot capture and Base64 encoding
-
-
-  Phase 7: Configure Claude API (or Copilot VLM if applicable) for screenshot analysis
-  (Integrate AHK output with AI input)'
+grounding_context: Microsoft Copilot now integrates with ServiceNow through advanced
+  connectors and Now Assist, allowing users to query IT/HR tickets, access knowledge
+  bases, and trigger workflows directly within Microsoft 365 apps like Teams and PowerPoint.
+  This integration enables conversational AI to fetch real-time ServiceNow data, improving
+  productivity by reducing context switching.

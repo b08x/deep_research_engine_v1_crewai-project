@@ -1,0 +1,10 @@
+.venv/
+.codemap/
+tests/
+.crush
+**/graphify-out/*
+**/__pycache__/*
+README.md
+GEMINI.md
+CLAUDE.md
+AGENTS.md

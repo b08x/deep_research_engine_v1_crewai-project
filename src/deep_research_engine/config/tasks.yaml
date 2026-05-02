@@ -74,6 +74,7 @@ technical_content_synthesis:
     for {target_audience} sophistication level and ready for potential audio pipeline
     consumption."
   agent: other_steve_pragmatic_editor
+  output_file: output/research_findings.md
   context:
   - deep_technical_research_execution
   - sift_fact_checking_and_verification
