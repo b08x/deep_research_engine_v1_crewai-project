@@ -17,7 +17,7 @@ from crewai.tools.structured_tool import _serialize_schema
 # Monkeypatching tools to fix serialization bug with Pydantic 2.11+ and crewAI checkpoints.
 # This ensures that args_schema (which is a class) is serialized to its JSON schema 
 # instead of causing a PydanticSerializationError.
-for tool_cls in [SerperDevTool, EXASearchTool, ArxivPaperTool, FileWriterTool]:
+for tool_cls in [SerperDevTool, EXASearchTool, ArxivPaperTool, FileWriterTool, ContentIngestionTool]:
     tool_cls.__annotations__['args_schema'] = Annotated[
         Type[BaseModel],
         PlainSerializer(_serialize_schema, return_type=dict | None, when_used="json")
