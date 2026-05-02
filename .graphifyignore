@@ -8,3 +8,9 @@ README.md
 GEMINI.md
 CLAUDE.md
 AGENTS.md
+.vector_store*
+output/
+.gemini/
+.gitignore
+pyproject.toml
+uv.lock

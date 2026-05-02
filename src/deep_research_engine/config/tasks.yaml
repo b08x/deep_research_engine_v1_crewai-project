@@ -13,6 +13,7 @@ strategy_formulation:
     areas for gap analysis, 6) Specific instructions for handling contradictions between
     sources.'
   agent: senior_research_strategist
+  output_file: output/01_strategy_brief.md
 deep_technical_research_execution:
   description: Execute comprehensive web research on {primary_topic} and {sub_nodes}
     using available research tools. Search for recent developments, technical specifications,
@@ -25,6 +26,7 @@ deep_technical_research_execution:
     citations for all claims. Include specific metrics, dates, and quantifiable data
     wherever possible.'
   agent: other_steve_deep_research_mode
+  output_file: output/02_technical_research.md
   context:
   - strategy_formulation
 sift_fact_checking_and_verification:
@@ -36,11 +38,12 @@ sift_fact_checking_and_verification:
     corrections, source reliability assessment, and revised summary.
   expected_output: "A structured fact-checking report following the SIFT protocol
     format: ✅ Verified Facts table (confidence ratings 1-5), ⚠️ Errors and Corrections
-    table, \U0001F4CC Corrections Summary with bolded key terms, \U0001F4CC Potential
-    Leads table, \U0001F6D1 Assessment of Source Reliability, \U0001F4D7 Revised Summary
-    (corrected and accurate), \U0001F3C5 Fact-Checker Assessment (with highlighted
-    key judgments), and \U0001F4A1 Verification methodology tip."
+    table, 📌 Corrections Summary with bolded key terms, 📌 Potential
+    Leads table, 🛑 Assessment of Source Reliability, 📗 Revised Summary
+    (corrected and accurate), 🏆 Fact-Checker Assessment (with highlighted
+    key judgments), and 💡 Verification methodology tip."
   agent: other_steve_sift_fact_checker
+  output_file: output/03_fact_checking_report.md
   context:
   - deep_technical_research_execution
 research_methodology_evaluation:
@@ -57,6 +60,7 @@ research_methodology_evaluation:
     engineering constraints), 4) The Surviving Architecture (detailed optimal path
     with causal relationships and load-bearing constraints).'
   agent: other_steve_tree_of_thoughts_evaluator
+  output_file: output/04_methodology_evaluation.md
   context:
   - deep_technical_research_execution
   - sift_fact_checking_and_verification
@@ -74,7 +78,7 @@ technical_content_synthesis:
     for {target_audience} sophistication level and ready for potential audio pipeline
     consumption."
   agent: other_steve_pragmatic_editor
-  output_file: output/research_findings.md
+  output_file: output/05_final_synthesis.md
   context:
   - deep_technical_research_execution
   - sift_fact_checking_and_verification
